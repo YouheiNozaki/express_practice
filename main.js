@@ -1,17 +1,32 @@
+"use strict";
+
 const port = 3000,
   express = require("express"),
   app = express();
-app
-  .get("/", (req, res) => {
-    res.send("Hello, Universe!");
-    console.log(req.params);
-    console.log(req.body);
-    console.log(req.url);
-    console.log(req.query);
+
+app.use(
+  express.urlencoded({
+    extended: false
   })
-  .listen(port, () => {
-    console.log(
-      `The Express.js server has srarted and is listening on port number:` +
-        `${port}`
-    );
-  });
+);
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`request made to: ${req.url}`);
+  next();
+});
+
+app.post("/", (req, res) => {
+  console.log(req.body);
+  console.log(req.query);
+  res.send("POST Successful!");
+});
+
+app.get("/items/:vegetable", (req, res) => {
+  let veg = req.params.vegetable;
+
+  res.send(`This is the page for ${veg}`);
+});
+app.listen(port, () => {
+  console.log(`Server running on port:${port}`);
+});
