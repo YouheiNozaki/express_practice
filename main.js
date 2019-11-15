@@ -1,11 +1,14 @@
 "use strict";
 
-const homeController = require("./controllers/homeController");
+const express = require("express"),
+  app = express(),
+  homeController = require("./controllers/homeController"),
+  layouts = require("express-ejs-layouts");
 
-const port = 3000,
-  express = require("express"),
-  app = express();
+app.set("port", process.env.PORT || 3000);
+app.set("view engine", "ejs");
 
+app.use(layouts);
 app.use(
   express.urlencoded({
     extended: false
@@ -18,10 +21,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/", homeController.logRequestPaths);
-
+app.get("/name/:myName", homeController.respondWithName);
 app.get("/items/:vegetable", homeController.sendReqParams);
 
-app.listen(port, () => {
-  console.log(`Server running on port:${port}`);
+app.post("/", (req, res) => {
+  console.log(req.body);
+  console.log(req.query);
+  res.send("POST Successful!");
+});
+
+app.listen(app.get("port"), () => {
+  console.log(`Server running on port:${app.get("port")}`);
 });
