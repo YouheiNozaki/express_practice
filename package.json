@@ -11,7 +11,8 @@
   "dependencies": {
     "ejs": "^2.7.2",
     "express": "^4.17.1",
-    "express-ejs-layouts": "^2.5.0"
+    "express-ejs-layouts": "^2.5.0",
+    "http-status-codes": "^1.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

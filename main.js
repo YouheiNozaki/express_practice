@@ -2,12 +2,14 @@
 
 const express = require("express"),
   app = express(),
+  errorController = require("./controllers/errorController"),
   homeController = require("./controllers/homeController"),
   layouts = require("express-ejs-layouts");
 
 app.set("port", process.env.PORT || 3000);
 app.set("view engine", "ejs");
 
+app.use(express.static("public"));
 app.use(layouts);
 app.use(
   express.urlencoded({
@@ -29,6 +31,10 @@ app.post("/", (req, res) => {
   console.log(req.query);
   res.send("POST Successful!");
 });
+
+app.use(errorController.logErrors);
+app.use(errorController.respondNoResourceFound);
+app.use(errorController.respondNoResourceFound);
 
 app.listen(app.get("port"), () => {
   console.log(`Server running on port:${app.get("port")}`);
