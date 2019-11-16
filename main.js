@@ -5,30 +5,29 @@ const express = require('express'),
   errorController = require('./controllers/errorController'),
   homeController = require('./controllers/homeController'),
   layouts = require('express-ejs-layouts'),
-  MongoDB = require('mongodb').MongoClient,
-  dbURL = 'mongodb://localhost:27017',
-  dbName = 'recipe_db';
+  mongoose = require('mongoose'),
+  Subscriber = require('./models/subscriber');
 
-MongoDB.connect(dbURL, (error, client) => {
-  if (error) throw error;
-  let db = client.db(dbName);
-  db.collection('contacts')
-    .find()
-    .toArray((error, data) => {
-      if (error) throw error;
-      console.log(data);
-    });
+mongoose.connect('mongodb:/localhost:27017/recipe_db', {
+  useNewUrlParser: true,
+});
+mongoose.set('useCreateIndex', true);
+const db = mongoose.connection;
 
-  db.collection('contacts').insert(
-    {
-      name: 'Freddie Mercury',
-      email: 'fred@queen.com',
-    },
-    (error, db) => {
-      if (error) throw error;
-      console.log(db);
-    },
-  );
+db.once('open', () => {
+  console.log('Successfully connected to MongoDb using Mongoose');
+});
+
+db.once('open', () => {
+  console.log('Successfully connected to MongoDB using Mongoose!');
+});
+
+let myQuery = Subscriber.findOne({
+  name: 'Jon Wexler',
+}).where('email', /wexler/);
+
+myQuery.exec((error, data) => {
+  if (data) console.log(data.name);
 });
 
 app.set('port', process.env.PORT || 3000);
