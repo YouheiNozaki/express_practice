@@ -1,4 +1,6 @@
-const httpStatus = require("http-status-codes");
+'use strict';
+
+const httpStatus = require('http-status-codes');
 
 exports.logErrors = (error, req, res, next) => {
   console.error(error.stack);
@@ -9,7 +11,7 @@ exports.logErrors = (error, req, res, next) => {
 exports.respondNoResourceFound = (req, res) => {
   let errorCode = httpstatus.NOT_FOUND;
   res.status(errorCode);
-  res.sendFile(`./public/${errorCode}.html`, { root: "./" });
+  res.sendFile(`./public/${errorCode}.html`, { root: './' });
 };
 
 exports.respondInternalError = (error, req, res, next) => {
