@@ -4,25 +4,24 @@ const express = require('express'),
   app = express(),
   errorController = require('./controllers/errorController'),
   homeController = require('./controllers/homeController'),
+  subscribersController = require('./controllers/subscribersController'),
   layouts = require('express-ejs-layouts'),
   mongoose = require('mongoose'),
   Subscriber = require('./models/subscriber');
 
-mongoose.connect('mongodb:/localhost:27017/recipe_db', {
+mongoose.Promise = global.Promise;
+
+mongoose.connect('mongodb://localhost:27017/recipe_db', {
   useNewUrlParser: true,
 });
 mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log('Successfully connected to MongoDb using Mongoose');
-});
-
-db.once('open', () => {
   console.log('Successfully connected to MongoDB using Mongoose!');
 });
 
-let myQuery = Subscriber.findOne({
+var myQuery = Subscriber.findOne({
   name: 'Jon Wexler',
 }).where('email', /wexler/);
 
@@ -44,18 +43,26 @@ app.use(express.json());
 app.use(homeController.logRequestPaths);
 
 app.get('/name', homeController.respondWithName);
-app.get('/items/:vegetable', homeController.sendReqParams);
+app.get('/items/:vegetable', homeController.sendReqParam);
 
-app.post('/', (req, res) => {
-  console.log(req.body);
-  console.log(req.query);
-  res.send('POST Successful!');
-});
+app.get(
+  '/subscribers',
+  subscribersController.getAllSubscribers,
+  (req, res, next) => {
+    res.render('subscribers', { subscribers: req.data });
+  },
+);
+
+app.get('/', homeController.index);
+app.get('/courses', homeController.showCourses);
+
+app.get('/contact', subscribersController.getSubscriptionPage);
+app.post('/subscribe', subscribersController.saveSubscriber);
 
 app.use(errorController.logErrors);
 app.use(errorController.respondNoResourceFound);
-app.use(errorController.respondNoResourceFound);
+app.use(errorController.respondInternalError);
 
 app.listen(app.get('port'), () => {
-  console.log(`Server running on port:${app.get('port')}`);
+  console.log(`Server running at http://localhost:${app.get('port')}`);
 });

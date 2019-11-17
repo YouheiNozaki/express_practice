@@ -7,42 +7,30 @@
       content="width=device-width, initial-scale=0.8, maximum-scale=1"
     />
     <title>Recipe App</title>
-    <style media="screen">
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        color: black;
-        text-align: center;
-        font-family: sans-serif;
-      }
-      #nav {
-        background-color: #7d498d;
-      }
-      #footer {
-        background-color: #9c73a9;
-        position: relative;
-        bottom: 0;
-      }
-      #container {
-        height: 100px;
-        padding-top: 40px;
-      }
-      .block {
-        padding-top: 40px;
-        width: 100%;
-        text-align: center;
-        height: 60px;
-        border: black dashed 5px;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/recipe_app.css" />
   </head>
 
   <body>
-    <% include partials/navigation %>
-    <div id="container">
+    <div id="nav">
+      <div class="col-sm nav-align">
+        <h1 id="title">Recipe App</h1>
+      </div>
+      <div class="col-sm nav-align">
+        <a href="/">
+          <span class="button">Home</span>
+        </a>
+        <a href="/courses">
+          <span class="button">Cooking Courses</span>
+        </a>
+        <a href="/contact">
+          <span class="button">Contact</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="container">
       <%- body %>
     </div>
-    <div id="footer" class="block">FOOTER</div>
   </body>
 </html>
